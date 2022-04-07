@@ -9,10 +9,11 @@
 #include "SD.h"
 #include "SPI.h"
 
-#define SCK  14
-#define MISO  2
-#define MOSI  15
-#define CS  13
+#define SCK 14
+#define MISO 2
+#define MOSI 15
+#define CS 13
+char string[25];
 
 void listDir(fs::FS &fs, const char *dirname, uint8_t levels)
 {
@@ -218,6 +219,7 @@ void testFileIO(fs::FS &fs, const char *path)
 void setup()
 {
     Serial.begin(115200);
+    Serial.println("Mounting");
     SPIClass spi = SPIClass(VSPI);
     spi.begin(SCK, MISO, MOSI, CS);
 
@@ -257,15 +259,23 @@ void setup()
 
     listDir(SD, "/", 0);
     createDir(SD, "/mydir");
-    listDir(SD, "/", 0);
+    // listDir(SD, "/", 0);
     removeDir(SD, "/mydir");
     listDir(SD, "/", 2);
     writeFile(SD, "/hello.txt", "Hello ");
-    appendFile(SD, "/hello.txt", "World!\n");
+
+    for (int i = 10 - 1; i >= 0; i--)
+    {
+        sprintf(string, "line %d\n", i);
+        Serial.println(i);
+        appendFile(SD, "/hello.txt", string);
+        delay(2000);
+    }
+
     readFile(SD, "/hello.txt");
-    deleteFile(SD, "/foo.txt");
-    renameFile(SD, "/hello.txt", "/foo.txt");
-    readFile(SD, "/foo.txt");
+    // deleteFile(SD, "/foo.txt");
+    // renameFile(SD, "/hello.txt", "/foo.txt");
+    // readFile(SD, "/foo.txt");
     testFileIO(SD, "/test.txt");
     Serial.printf("Total space: %lluMB\n", SD.totalBytes() / (1024 * 1024));
     Serial.printf("Used space: %lluMB\n", SD.usedBytes() / (1024 * 1024));

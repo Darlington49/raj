@@ -1,8 +1,9 @@
 const uint8_t blue = 23;
 #include <Wire.h>    // Only needed for Arduino 1.6.5 and earlier
-#include "SSD1306.h" // alias for `#include "SSD1306Wire.h"`
-
-SSD1306 display(0x3c, 21, 22);
+//#include "SSD1306.h" // alias for `#include "SSD1306Wire.h"`
+//SSD1306 display(0x3c, 21, 22);
+#include "SH1106.h"
+SH1106 display(0x3c, 21, 22);
 int n = 0;
 void setup()
 {
@@ -14,7 +15,7 @@ void setup()
     display.setFont(ArialMT_Plain_10);
 }
 char string[25];
-void drawFontFaceDemo(float n)
+void drawFontFaceDemo(int  n)
 {
     // Font Demo1
     // create more fonts at http://oleddisplay.squix.ch/
@@ -39,7 +40,7 @@ void loop()
 
     n++;
 
-    Serial.println("n = ");
+    Serial.print("n = ");
     Serial.print(n);
     Serial.println(" Times");
     display.clear();
